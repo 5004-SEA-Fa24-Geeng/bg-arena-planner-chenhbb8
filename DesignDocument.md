@@ -12,13 +12,85 @@ Place your class diagrams below. Make sure you check the file in the browser on 
 
 Provide a class diagram for the provided code as you read through it.  For the classes you are adding, you will create them as a separate diagram, so for now, you can just point towards the interfaces for the provided code diagram.
 
+```mermaid
+classDiagram
+    class IGameList {
+        +getGameNames()
+        +clear()
+        +count()
+        +saveGame()
+        +addToList()
+        +removeFromList()
+    }
+    class IPlanner {
+        +filter()
+        +reset()
+    }
+    class BoardGame {
+        -name: String
+        -id: int
+        -minPlayers: int
+        -maxPlayers: int
+        -maxPlayTime: int
+        -minPlayTime: int
+        -difficulty: double
+        -rank: int
+        -averageRating: double
+        -yearPublished: int
+        +Getters()
+    }
+    class GameData {
+        +fromColumnName()
+    }
+    class Operations {
+        +getOperator()
+    }
+    class GamesLoader {
+        +loadGamesFile()
+    }
+    class ConsoleApp {
+        +start()
+    }
+    class BGArenaPlanner {
+        +main()
+    }
 
+    IGameList <|-- GameList
+    IPlanner <|-- Planner
+    GamesLoader --> BoardGame
+    Planner --> BoardGame
+    GameList --> BoardGame
+    ConsoleApp --> IGameList
+    ConsoleApp --> IPlanner
+    BGArenaPlanner --> ConsoleApp
+    BGArenaPlanner --> Planner
+    BGArenaPlanner --> GameList
+```
 
 ### Your Plans/Design
 
 Create a class diagram for the classes you plan to create. This is your initial design, and it is okay if it changes. Your starting points are the interfaces. 
-
-
+```mermaid
+classDiagram
+    class GameList {
+        -selectedGames: Set<BoardGame>
+        +getGameNames()
+        +clear()
+        +count()
+        +saveGame()
+        +addToList()
+        +removeFromList()
+    }
+```
+```mermaid
+classDiagram
+    class Planner {
+        -masterList: Set<BoardGame>
+        -filteredGames: Set<BoardGame>
+        +filter()
+        +reset()
+    }
+```
 
 
 
@@ -36,9 +108,23 @@ Write a test (in english) that you can picture for the class diagram you have cr
 
 You should feel free to number your brainstorm. 
 
-1. Test 1..
-2. Test 2..
+### Planner Tests
+1. Filtering by name (name == "Go").
+2. Filtering by minimum players (minPlayers > 2).
+3. Filtering by difficulty (difficulty <= 6.5).
+4. Filtering with multiple conditions (minPlayers > 2, maxPlayers < 5).
+5. Resetting filters (reset()).
 
+### GameList Tests
+1. Adding one game by name.
+
+2. Adding multiple games using a range (e.g., 1-3).
+
+3. Removing a game.
+
+4. Ensuring no duplicate games.
+
+5. Saving and loading the list from a file.
 
 
 
