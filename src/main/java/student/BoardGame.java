@@ -2,53 +2,74 @@ package student;
 
 
 import java.util.List;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Data Class for the Board Game Object.
- * 
+ * <p>
  * This class is considered immutable, as every value is both final, and can only be accessed
  * through getters.
  */
 public class BoardGame {
-    /** Name of the board game. */
+    /**
+     * Name of the board game.
+     */
     private final String name;
-    /** Unique identifier of the board game. */
+    /**
+     * Unique identifier of the board game.
+     */
     private final int id;
-    /** Minimum number of players. */
+    /**
+     * Minimum number of players.
+     */
     private final int minPlayers;
-    /** Maximum number of players. */
+    /**
+     * Maximum number of players.
+     */
     private final int maxPlayers;
-    /** Maximum play time in minutes. */
+    /**
+     * Maximum play time in minutes.
+     */
     private final int maxPlayTime;
-    /** Minimum play time in minutes. */
+    /**
+     * Minimum play time in minutes.
+     */
     private final int minPlayTime;
-    /** Average difficulty of the game. */
+    /**
+     * Average difficulty of the game.
+     */
     private final double difficulty; // avgweight
-    /** Rank of the game. */
+    /**
+     * Rank of the game.
+     */
     private final int rank;
-    /** Average rating of the game. */
+    /**
+     * Average rating of the game.
+     */
     private final double averageRating;
-    /** Year the game was published. */
+    /**
+     * Year the game was published.
+     */
     private final int yearPublished;
 
     /**
      * Constructor for the BoardGame object.
-     * 
-     * @param name game name
-     * @param id unique identifier
-     * @param minPlayers minimum number of players
-     * @param maxPlayers maximum number of players
-     * @param minPlayTime minimum play time in minutes
-     * @param maxPlayTime maximum play time in minutes
-     * @param difficulty average difficulty of the game
-     * @param rank rank of the game
+     *
+     * @param name          game name
+     * @param id            unique identifier
+     * @param minPlayers    minimum number of players
+     * @param maxPlayers    maximum number of players
+     * @param minPlayTime   minimum play time in minutes
+     * @param maxPlayTime   maximum play time in minutes
+     * @param difficulty    average difficulty of the game
+     * @param rank          rank of the game
      * @param averageRating average rating of the game
      * @param yearPublished year the game was published
      */
     public BoardGame(String name, int id, int minPlayers, int maxPlayers, int minPlayTime,
-            int maxPlayTime, double difficulty, int rank, double averageRating, int yearPublished) {
+                     int maxPlayTime, double difficulty, int rank, double averageRating, int yearPublished) {
         this.name = name;
         this.id = id; // purposefully kept hidden, so not used in filters or sorting
         this.minPlayers = minPlayers;
@@ -63,7 +84,7 @@ public class BoardGame {
 
     /**
      * Get the name of the game.
-     * 
+     *
      * @return name of the game
      */
     public String getName() {
@@ -72,7 +93,7 @@ public class BoardGame {
 
     /**
      * Get the unique identifier of the game.
-     * 
+     *
      * @return unique identifier
      */
     public int getId() {
@@ -81,7 +102,7 @@ public class BoardGame {
 
     /**
      * Get the minimum number of players.
-     * 
+     *
      * @return minimum number of players
      */
     public int getMinPlayers() {
@@ -90,7 +111,7 @@ public class BoardGame {
 
     /**
      * Get the maximum number of players.
-     * 
+     *
      * @return maximum number of players
      */
     public int getMaxPlayers() {
@@ -99,7 +120,7 @@ public class BoardGame {
 
     /**
      * Get the maximum play time in minutes.
-     * 
+     *
      * @return maximum play time in minutes
      */
     public int getMaxPlayTime() {
@@ -109,7 +130,7 @@ public class BoardGame {
 
     /**
      * Get the minimum play time in minutes.
-     * 
+     *
      * @return minimum play time in minutes
      */
     public int getMinPlayTime() {
@@ -119,7 +140,7 @@ public class BoardGame {
 
     /**
      * Get the average difficulty of the game.
-     * 
+     *
      * @return average difficulty of the game
      */
     public double getDifficulty() {
@@ -129,7 +150,7 @@ public class BoardGame {
 
     /**
      * Get the rank of the game. The rank is defined on its rankings in BGGeek.
-     * 
+     *
      * @return rank of the game
      */
     public int getRank() {
@@ -139,7 +160,7 @@ public class BoardGame {
 
     /**
      * Get the average rating of the game.
-     * 
+     *
      * @return average rating of the game
      */
     public double getRating() {
@@ -149,7 +170,7 @@ public class BoardGame {
 
     /**
      * Get the year the game was published.
-     * 
+     *
      * @return year the game was published
      */
     public int getYearPublished() {
@@ -158,9 +179,9 @@ public class BoardGame {
 
     /**
      * Get the Name (value) pair based on the GameData enum.
-     * 
+     * <p>
      * In the case of Name, it will return only the name of the game.
-     * 
+     *
      * @param col GameData enum value
      * @return value of Name (value) pair
      */
@@ -191,7 +212,7 @@ public class BoardGame {
 
     /**
      * Get a toString that shows all values of the object.
-     * 
+     *
      * @return string representation of the object
      */
     @Override
@@ -204,11 +225,11 @@ public class BoardGame {
 
     /**
      * Check if two BoardGame objects are equal.
-     * 
+     * <p>
      * Two BoardGame objects are considered equal if all fields are equal, except for the following:
      * - minPlayers - maxPlayers - maxPlayTime - minPlayTime - difficulty - rank - averageRating -
      * yearPublished
-     * 
+     *
      * @param obj object to compare
      * @return true if the objects are equal, false otherwise
      */
@@ -221,10 +242,10 @@ public class BoardGame {
 
     /**
      * Get the hash code of the object.
-     * 
+     * <p>
      * The hash code is based on all fields, except for the following: - minPlayers - maxPlayers -
      * maxPlayTime - minPlayTime - difficulty - rank - averageRating - yearPublished
-     * 
+     *
      * @return hash code of the object
      */
     @Override
@@ -237,11 +258,11 @@ public class BoardGame {
 
     /**
      * Simple main we used for testing.
-     * 
+     * <p>
      * It is possible to include small mains in each class as you develop to test/practice different
      * things you are working on. We left this in to demonstrate that it is possible to have a main
      * across multiple classes.
-     * 
+     *
      * @param args command line arguments
      */
     public static void main(String[] args) { // used for local quick tests

@@ -10,40 +10,52 @@ import java.util.Random;
 
 /**
  * Primary application that makes use of the IGameList and IPlanner interfaces.
- * 
+ * <p>
  * The console app is an interactive way to manage the BG Arena game list,
  * and for a client to build a list of games they want to play, and
  * save out that list. Most of the features are focused on
  * providing a progressive filter to find games, and then add them to the list.
  */
 public class ConsoleApp {
-    /** Interaction with the system terminal/command line. */
+    /**
+     * Interaction with the system terminal/command line.
+     */
     private static final Scanner IN = new Scanner(System.in);
-    /** Default name to save the game list to. */
+    /**
+     * Default name to save the game list to.
+     */
     private static final String DEFAULT_FILENAME = "games_list.txt";
-    /** random number generator only needs to be built once. */
+    /**
+     * random number generator only needs to be built once.
+     */
     private static final Random RND = new Random();
-    /** scanner to help with processing the command string. */
+    /**
+     * scanner to help with processing the command string.
+     */
     private Scanner current;
-    /** The game list to manage. */
+    /**
+     * The game list to manage.
+     */
     private final IGameList gameList;
-    /** The planner to help filter games. */
+    /**
+     * The planner to help filter games.
+     */
     private final IPlanner planner;
 
     /**
      * Constructor for the console app.
-     * 
+     *
      * @param gameList the game list to manage.
      * @param planner  the planner to help filter games.
      */
     public ConsoleApp(IGameList gameList, IPlanner planner) {
         this.gameList = gameList;
         this.planner = planner;
-    }    
+    }
 
     /**
      * Start the console application.
-     * 
+     * <p>
      * Processes the main menu commands and redirects.
      */
     public void start() {
@@ -169,7 +181,7 @@ public class ConsoleApp {
 
     /**
      * Print the filtered stream of games.
-     * 
+     *
      * @param games  the stream of games to print.
      * @param sortON also is the column used for 'extra info' based on the sort
      *               type.
@@ -257,7 +269,7 @@ public class ConsoleApp {
 
     /**
      * Get the next command from the user.
-     * 
+     *
      * @return the next command.
      */
     private ConsoleText nextCommand() {
@@ -270,19 +282,18 @@ public class ConsoleApp {
 
     /**
      * Get the remainder of the current line.
-     * 
+     *
      * @return the remainder of the current line.
      */
     private String remainder() {
         return current != null && current.hasNext() ? current.nextLine().trim() : "";
     }
 
-    /** 
+    /**
      * Gets input from the client.
-     * 
+     *
      * @param format the format string to print.
      * @param args   the arguments to the format string.
-     * 
      * @return the input from the client as a string, one line at a time.
      */
     private static String getInput(String format, Object... args) {
@@ -297,13 +308,12 @@ public class ConsoleApp {
     }
 
 
-    /** 
+    /**
      * Prints output to the client.
-     * 
+     * <p>
      * We could call printf directly, but this gives us one location in case
      * we want to change the output to a file or other location.
-     * 
-     * 
+     *
      * @param format the format string to print.
      * @param output the output to print (array to match the format).
      */
@@ -313,38 +323,50 @@ public class ConsoleApp {
 
     /**
      * Enum to help with console text.
-     * 
+     * <p>
      * This enum uses a properties file (stored in resources), so that
      * we can easily change the text without changing the code. While not
      * fully setup, this is also a way to add localization to the application by
      * having different properties files for different languages.
-     * 
+     * <p>
      * It is worth noting this is *one* way to do this. It is also
      * very common to have a class with a number of final static strings
      * that are used for the same purpose - the most important part
      * is to separate the text from the code.
      */
     private enum ConsoleText {
-        /** various commands and text. */
+        /**
+         * various commands and text.
+         */
         WELCOME, HELP, INVALID, GOODBYE, PROMPT, NO_FILTER, NO_GAMES_LIST, FILTERED_CLEAR, LIST_HELP, FILTER_HELP,
-        /** commands continued. */
+        /**
+         * commands continued.
+         */
         INVALID_LIST, EASTER_EGG, CMD_EASTER_EGG,
-        /** commands general. */
+        /**
+         * commands general.
+         */
         CMD_EXIT, CMD_HELP, CMD_QUESTION, CMD_FILTER, CMD_LIST,
-        /** commands specific to lists and filters. */
+        /**
+         * commands specific to lists and filters.
+         */
         CMD_SHOW, CMD_ADD, CMD_REMOVE, CMD_CLEAR, CMD_SAVE,
-        /** more options on commands. */
+        /**
+         * more options on commands.
+         */
         CMD_OPTION_ALL, CMD_SORT_OPTION, CMD_SORT_OPTION_DIRECTION_ASC, CMD_SORT_OPTION_DIRECTION_DESC;
 
-        /** load the files on class load. */
+        /**
+         * load the files on class load.
+         */
         private static final Properties CTEXT = new Properties();
 
         /**
          * Get the string representation of the enum.
-         * 
+         * <p>
          * This ends up being the value in the properties file with the key
          * being paired to the enum name, lowercase.
-         * 
+         *
          * @return the string representation of the enum.
          */
         @Override
@@ -354,9 +376,9 @@ public class ConsoleApp {
 
         /**
          * Get the enum from a string.
-         * 
+         * <p>
          * Has a null check in case the string is not found in the properties file.
-         * 
+         *
          * @param str the string to convert to an enum.
          * @return the enum value.
          */
@@ -372,10 +394,10 @@ public class ConsoleApp {
         /*
          * The static location is used when the classes are loaded into
          * static memory which is done for the enum values.
-         * 
+         *
          * This section then loads the properties file into the cText,
          * so that the enums can access the strings from the properties file.
-         * 
+         *
          * The /console.properties file is stored in the resources directory,
          * using the base resources location as the root.
          */

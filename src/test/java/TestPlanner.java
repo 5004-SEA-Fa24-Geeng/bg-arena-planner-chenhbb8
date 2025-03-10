@@ -1,26 +1,33 @@
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import student.BoardGame;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import student.Filters;
+import student.Sorts;
+import student.GameData;
 import student.Planner;
 import student.IPlanner;
-import student.GameData;
+
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
  * JUnit test for the Planner class.
- * 
+ * <p>
  * Just a sample test to get you started, also using
- * setup to help out. 
+ * setup to help out.
  */
 public class TestPlanner {
     static Set<BoardGame> games;
+    private IPlanner planner;
 
     @BeforeAll
-    public static void setup() {
+    public static void setupClass() {
         games = new HashSet<>();
         games.add(new BoardGame("17 days", 6, 1, 8, 70, 70, 9.0, 600, 9.0, 2005));
         games.add(new BoardGame("Chess", 7, 2, 2, 10, 20, 10.0, 700, 10.0, 2006));
@@ -32,13 +39,43 @@ public class TestPlanner {
         games.add(new BoardGame("Tucano", 5, 10, 20, 60, 90, 6.0, 500, 8.0, 2004));
     }
 
-     @Test
-    public void testFilterName() {
-        IPlanner planner = new Planner(games);
+    @BeforeEach
+    public void setup() {
+        planner = new Planner(games);
+    }
+
+    @Test
+    public void testFilterByName() {
         List<BoardGame> filtered = planner.filter("name == Go").toList();
         assertEquals(1, filtered.size());
         assertEquals("Go", filtered.get(0).getName());
     }
-    
+
+    @Test
+    public void testFilterByMinPlayers() {
+        List<BoardGame> filtered = planner.filter("minPlayers > 2").collect(Collectors.toList());
+        assertEquals(3, filtered.size());
+        assertTrue(filtered.stream().anyMatch(game -> game.getName().equals("GoRami")));
+        assertTrue(filtered.stream().anyMatch(game -> game.getName().equals("Monopoly")));
+        assertTrue(filtered.stream().anyMatch(game -> game.getName().equals("Tucano")));
+    }
+
+    @Test
+    public void testFilterByRatingAndSortByYear() {
+        List<BoardGame> filtered = planner.filter("rating >= 7", GameData.YEAR, true)
+                .collect(Collectors.toList());
+        assertEquals(6, filtered.size());
+        assertEquals("Go", filtered.get(0).getName());
+        assertEquals("GoRami", filtered.get(1).getName());
+    }
+
+    @Test
+    public void testResetFilters() {
+        planner.filter("minPlayers > 2");
+        planner.reset();
+        List<BoardGame> filtered = planner.filter("", GameData.NAME, true).collect(Collectors.toList());
+        assertEquals(8, filtered.size());
+    }
+
 
 }

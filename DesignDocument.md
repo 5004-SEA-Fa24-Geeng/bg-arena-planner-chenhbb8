@@ -137,7 +137,86 @@ For the final design, you just need to do a single diagram that includes both th
 > [!WARNING]
 > If you resubmit your assignment for manual grading, this is a section that often needs updating. You should double check with every resubmit to make sure it is up to date.
 
+```mermaid
+classDiagram
+    class IGameList {
+        +getGameNames()
+        +clear()
+        +count()
+        +saveGame()
+        +addToList()
+        +removeFromList()
+    }
+    class IPlanner {
+        +filter()
+        +reset()
+    }
+    class BoardGame {
+        -name: String
+        -id: int
+        -minPlayers: int
+        -maxPlayers: int
+        -maxPlayTime: int
+        -minPlayTime: int
+        -difficulty: double
+        -rank: int
+        -averageRating: double
+        -yearPublished: int
+        +Getters()
+    }
+    class GameData {
+        +fromColumnName()
+    }
+    class Operations {
+        +getOperator()
+    }
+    class GamesLoader {
+        +loadGamesFile()
+    }
+    class ConsoleApp {
+        +start()
+    }
+    class BGArenaPlanner {
+        +main()
+    }
+    class Sorts {
+        +sortBy()
+        +getComparator()
+    }
+    class Filters {
+        +applyFilter()
+    }
+    class GameList {
+        -selectedGames: Set<BoardGame>
+        +getGameNames()
+        +clear()
+        +count()
+        +saveGame()
+        +addToList()
+        +removeFromList()
+    }
+    class Planner {
+        -masterList: Set<BoardGame>
+        -filteredGames: Stream<BoardGame>
+        +filter()
+        +reset()
+    }
 
+    IGameList <|-- GameList
+    IPlanner <|-- Planner
+    GamesLoader --> BoardGame
+    Planner --> BoardGame
+    Planner --> Filters
+    Planner --> Sorts
+    GameList --> BoardGame
+    ConsoleApp --> IGameList
+    ConsoleApp --> IPlanner
+    BGArenaPlanner --> ConsoleApp
+    BGArenaPlanner --> Planner
+    BGArenaPlanner --> GameList
+    Sorts --> BoardGame
+    Filters --> BoardGame
+```
 
 
 
@@ -146,4 +225,14 @@ For the final design, you just need to do a single diagram that includes both th
 > [!IMPORTANT]
 > The value of reflective writing has been highly researched and documented within computer science, from learning to information to showing higher salaries in the workplace. For this next part, we encourage you to take time, and truly focus on your retrospective.
 
-Take time to reflect on how your design has changed. Write in *prose* (i.e. do not bullet point your answers - it matters in how our brain processes the information). Make sure to include what were some major changes, and why you made them. What did you learn from this process? What would you do differently next time? What was the most challenging part of this process? For most students, it will be a paragraph or two. 
+Take time to reflect on how your design has changed. Write in *prose* (i.e. do not bullet point your answers - it matters in how our brain processes the information). Make sure to include what were some major changes, and why you made them. What did you learn from this process? What would you do differently next time? What was the most challenging part of this process? For most students, it will be a paragraph or two.
+
+
+## Reflection
+Throughout this project, the design evolved significantly as I implemented and tested various components.            Initially, Ifocused on a basic structure, but as I progressed, we realized the need for additional utility classes such as `Sorts` and `Filters` to ensure a modular and scalable design.            The introduction of these classes helped me apply the strategy pattern, allowing for flexible sorting and filtering of board games without modifying the core logic of `Planner`.
+
+One of the major changes in my design was the refinement of `Planner` to integrate `Sorts` and `Filters` seamlessly.            Initially, filtering and sorting logic were considered part of `Planner`, but I quickly realized that separating concerns would make our code more maintainable and reusable.            Another significant improvement was ensuring that `GameList` handled game storage efficiently while preventing duplicate entries.
+
+Through this process, I learned the importance of iterative design and the value of writing tests first.            Implementing tests early helped us catch edge cases and refine my logic before fully integrating components.            Additionally, debugging and resolving dependency issues reinforced my understanding of Java Streams and exception handling.
+
+If I was to approach this project again, I would likely spend more time upfront designing a clearer structure to minimize refactoring later.            While refactoring is a natural part of development, having a well-defined plan early on could have reduced the number of modifications needed.            The most challenging part of this process was ensuring all components interacted correctly, particularly when integrating `Planner` with `Sorts` and `Filters`.            Debugging issues related to Java Streams and lambda expressions also required careful attention.
