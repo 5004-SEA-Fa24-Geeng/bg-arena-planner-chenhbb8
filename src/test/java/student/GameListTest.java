@@ -65,9 +65,11 @@ class GameListTest {
 
     @Test
     public void testAddToList() {
-        gameList.addToList("Chess", games.stream());  // First stream
-        gameList.addToList("Catan", games.stream());  // Second stream (fixes issue)
-        assertEquals(2, gameList.count());
+        gameList.addToList("Chess", games.stream());
+        gameList.addToList("Catan", games.stream());
+        gameList.addToList("Monopoly", games.stream());
+
+        assertEquals(3, gameList.count());
     }
 
     @Test
