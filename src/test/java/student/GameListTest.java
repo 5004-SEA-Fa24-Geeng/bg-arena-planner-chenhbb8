@@ -66,17 +66,9 @@ class GameListTest {
 
     @Test
     public void testAddToList() {
-        List<BoardGame> gameListCopy = games.stream().collect(Collectors.toList());
-
-        // Print the names before searching
-        System.out.println("Attempting to add: Chess");
-        gameList.addToList("Chess", gameListCopy.stream());
-
-        System.out.println("Attempting to add: Catan");
-        gameList.addToList("Catan", gameListCopy.stream());
-
-        System.out.println("Attempting to add: Monopoly");
-        gameList.addToList("Monopoly", gameListCopy.stream());
+        gameList.addToList("Chess", games.stream());
+        gameList.addToList("Catan", games.stream());
+        gameList.addToList("Monopoly", games.stream());
 
         assertEquals(3, gameList.count());
     }

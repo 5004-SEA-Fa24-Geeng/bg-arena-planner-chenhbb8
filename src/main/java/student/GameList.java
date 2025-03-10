@@ -92,25 +92,10 @@ public class GameList implements IGameList {
      * @throws UnsupportedOperationException if the game is not found in the stream.
      */
     @Override
-    public void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException {
-        if (filtered == null) {
-            throw new UnsupportedOperationException("Provided game stream is null.");
-        }
-
-        // Collect into a list for debugging
-        List<BoardGame> debugList = filtered.collect(Collectors.toList());
-        System.out.println("Games available in stream: " + debugList.size());
-        debugList.forEach(g -> System.out.println("Checking game: " + g.getName()));
-
-        Optional<BoardGame> game = debugList.stream()
-                .filter(g -> g.getName().trim().equalsIgnoreCase(str.trim()))
-                .findFirst();
-
-        if (game.isPresent()) {
-            selectedGames.add(game.get());
-        } else {
-            throw new UnsupportedOperationException("Game not found in the provided stream.");
-        }
+    public void addToList(String str, Stream<BoardGame> filtered) {
+        filtered.filter(g -> g.getName().trim().equalsIgnoreCase(str.trim()))
+                .findFirst()
+                .ifPresent(selectedGames::add);
     }
 
     /**
