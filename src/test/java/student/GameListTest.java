@@ -66,16 +66,21 @@ class GameListTest {
 
     @Test
     public void testAddToList() {
-        // Convert the stream to a list once
         List<BoardGame> gameListCopy = games.stream().collect(Collectors.toList());
 
-        // Ensure each call gets a fresh stream
+        // Print the names before searching
+        System.out.println("Attempting to add: Chess");
         gameList.addToList("Chess", gameListCopy.stream());
+
+        System.out.println("Attempting to add: Catan");
         gameList.addToList("Catan", gameListCopy.stream());
+
+        System.out.println("Attempting to add: Monopoly");
         gameList.addToList("Monopoly", gameListCopy.stream());
 
         assertEquals(3, gameList.count());
     }
+
 
     @Test
     public void testRemoveFromList() {
