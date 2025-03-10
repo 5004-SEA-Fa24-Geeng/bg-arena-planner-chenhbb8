@@ -21,6 +21,9 @@ public class GameList implements IGameList {
      */
     private Set<BoardGame> selectedGames;
 
+    /**
+     * Constructs a new GameList with an empty set of selected board games.
+     */
     public GameList() {
         this.selectedGames = new HashSet<>();
     }
@@ -84,19 +87,18 @@ public class GameList implements IGameList {
     /**
      * Adds a game to the list if it exists in the provided stream.
      *
-     * @param str The name of the game to add.
+     * @param str      The name of the game to add.
      * @param filtered The stream of board games to search for the game.
      * @throws UnsupportedOperationException if the game is not found in the stream.
      */
     @Override
     public void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException {
-        // TODO Auto-generated method stub
         if (filtered == null) {
             throw new UnsupportedOperationException("Provided game stream is null.");
         }
 
         Optional<BoardGame> game = filtered
-                .filter(g -> g.getName().equalsIgnoreCase(str))
+                .filter(g -> g.getName().equalsIgnoreCase(str)) // Case-insensitive comparison
                 .findFirst();
 
         if (game.isPresent()) {

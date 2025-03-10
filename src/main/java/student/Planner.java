@@ -8,7 +8,15 @@ import java.util.stream.Stream;
  * It applies various filtering and sorting strategies to return a customized game list.
  */
 public class Planner implements IPlanner {
+
+    /**
+     * Stores the complete list of board games from the dataset.
+     */
     private Set<BoardGame> masterList;
+
+    /**
+     * Stores the current filtered list of board games.
+     */
     private Stream<BoardGame> filteredGames;
 
     /**

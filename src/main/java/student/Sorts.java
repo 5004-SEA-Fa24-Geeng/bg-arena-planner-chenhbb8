@@ -10,6 +10,12 @@ import java.util.List;
 public class Sorts {
 
     /**
+     * Private constructor to prevent instantiation
+     */
+    private Sorts() {
+        throw new UnsupportedOperationException("Utility class should not be instantiated.");
+    }
+    /**
      * Sorts a list of board games based on the specified attribute and order.
      *
      * @param games The list of board games to be sorted.

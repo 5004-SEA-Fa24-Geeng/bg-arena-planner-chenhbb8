@@ -10,6 +10,12 @@ import java.util.stream.Stream;
 public class Filters {
 
     /**
+     * Private constructor to prevent instantiation
+     */
+    private Filters() {
+        throw new UnsupportedOperationException("Utility class should not be instantiated.");
+    }
+    /**
      * Applies a filter to a stream of board games based on the given criteria.
      *
      * @param filter The filter condition as a string (e.g., "rating >= 7").
