@@ -7,10 +7,10 @@ import java.util.stream.Stream;
  * The Filters class provides methods to filter board games based on user-specified criteria.
  * It applies filtering strategies dynamically based on provided conditions.
  */
-public class Filters {
+public final class Filters {
 
     /**
-     * Private constructor to prevent instantiation
+     * Private constructor to prevent instantiation.
      */
     private Filters() {
         throw new UnsupportedOperationException("Utility class should not be instantiated.");

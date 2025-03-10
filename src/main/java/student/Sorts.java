@@ -7,10 +7,10 @@ import java.util.List;
  * The Sorts class provides methods to sort board games based on various attributes.
  * It applies different sorting strategies dynamically based on user input.
  */
-public class Sorts {
+public final class Sorts {
 
     /**
-     * Private constructor to prevent instantiation
+     * Private constructor to prevent instantiation.
      */
     private Sorts() {
         throw new UnsupportedOperationException("Utility class should not be instantiated.");
