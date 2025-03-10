@@ -103,7 +103,7 @@ public class GameList implements IGameList {
         debugList.forEach(g -> System.out.println("Checking game: " + g.getName()));
 
         Optional<BoardGame> game = debugList.stream()
-                .filter(g -> g.getName().trim().equalsIgnoreCase(str.trim())) // Ensure case-insensitive and trimmed match
+                .filter(g -> g.getName().trim().equalsIgnoreCase(str.trim()))
                 .findFirst();
 
         if (game.isPresent()) {
