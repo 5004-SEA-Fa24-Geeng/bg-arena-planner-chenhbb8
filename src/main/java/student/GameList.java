@@ -97,8 +97,13 @@ public class GameList implements IGameList {
             throw new UnsupportedOperationException("Provided game stream is null.");
         }
 
-        Optional<BoardGame> game = filtered
-                .filter(g -> g.getName().equalsIgnoreCase(str)) // Case-insensitive comparison
+        // Collect into a list for debugging
+        List<BoardGame> debugList = filtered.collect(Collectors.toList());
+        System.out.println("Games available in stream: " + debugList.size());
+        debugList.forEach(g -> System.out.println("Checking game: " + g.getName()));
+
+        Optional<BoardGame> game = debugList.stream()
+                .filter(g -> g.getName().trim().equalsIgnoreCase(str.trim())) // Ensure case-insensitive and trimmed match
                 .findFirst();
 
         if (game.isPresent()) {

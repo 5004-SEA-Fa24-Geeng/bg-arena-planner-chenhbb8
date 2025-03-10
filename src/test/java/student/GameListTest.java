@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -65,9 +66,13 @@ class GameListTest {
 
     @Test
     public void testAddToList() {
-        gameList.addToList("Chess", games.stream());
-        gameList.addToList("Catan", games.stream());
-        gameList.addToList("Monopoly", games.stream());
+        // Convert the stream to a list once
+        List<BoardGame> gameListCopy = games.stream().collect(Collectors.toList());
+
+        // Ensure each call gets a fresh stream
+        gameList.addToList("Chess", gameListCopy.stream());
+        gameList.addToList("Catan", gameListCopy.stream());
+        gameList.addToList("Monopoly", gameListCopy.stream());
 
         assertEquals(3, gameList.count());
     }
