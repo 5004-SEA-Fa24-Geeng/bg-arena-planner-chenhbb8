@@ -96,14 +96,62 @@ public class GameList implements IGameList {
         // Convert stream to list to avoid stream reuse issues
         List<BoardGame> gameList = filtered.collect(Collectors.toList());
 
-        // Find the game in the list
+        if (str.equalsIgnoreCase("ALL")) {
+            selectedGames.addAll(gameList);
+            return;
+        }
+
+        if (str.contains("-")) {
+            String[] parts = str.split("-");
+            if (parts.length != 2) {
+                throw new IllegalArgumentException("Invalid range format: " + str);
+            }
+
+            try {
+                int start = Integer.parseInt(parts[0]);
+                int end = Integer.parseInt(parts[1]);
+
+                if (start <= 0 || end <= 0 || start > gameList.size()) {
+                    throw new IllegalArgumentException("Invalid range: " + str);
+                }
+
+                // Ensure end does not exceed available games
+                if (end > gameList.size()) {
+                    end = gameList.size();
+                }
+
+                for (int i = start; i <= end; i++) {
+                    selectedGames.add(gameList.get(i - 1)); // Adjust for 1-based index
+                }
+                return;
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid range values: " + str);
+            }
+        }
+
+        try {
+            int index = Integer.parseInt(str);
+            if (index <= 0 || index > gameList.size()) {
+                throw new IllegalArgumentException("Invalid index: " + str);
+            }
+            selectedGames.add(gameList.get(index - 1)); // Adjust for 1-based index
+            return;
+        } catch (NumberFormatException ignored) {
+            // Continue to name matching if str is not a number
+        }
+
+        // Find the game by name
         for (BoardGame game : gameList) {
             if (game.getName().trim().equalsIgnoreCase(str.trim())) {
                 selectedGames.add(game);
-                return; // Stop after adding the first match
+                return;
             }
         }
+
+        throw new IllegalArgumentException("Game not found: " + str);
     }
+
+
 
     /**
      * Removes a game from the list if it exists.
