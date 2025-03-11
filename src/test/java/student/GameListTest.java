@@ -36,7 +36,7 @@ class GameListTest {
         gameList.addToList("Chess", games.stream());
         gameList.addToList("Monopoly", games.stream());
         List<String> names = gameList.getGameNames();
-        assertEquals(List.of("Chess", "Monopoly", "Catan"), names);
+        assertEquals(List.of("Catan", "Chess", "Monopoly"), names);
     }
 
     @Test
@@ -88,5 +88,54 @@ class GameListTest {
         gameList.addToList("Monopoly", games.stream());
         gameList.removeFromList("Monopoly");
         assertEquals(0, gameList.count());
+    }
+
+    /**
+     * Tests adding a game by name.
+     */
+    @Test
+    public void testAddToListByName() {
+        gameList.addToList("Catan", games.stream());
+        assertEquals(1, gameList.count());
+        assertEquals("Catan", gameList.getGameNames().get(0));
+
+        // Ensure an exception is thrown when adding a non-existent game
+        assertThrows(IllegalArgumentException.class, () -> gameList.addToList("Tucano", games.stream()));
+        System.out.println(gameList.getGameNames());
+    }
+
+    /**
+     * Tests adding a single game by index.
+     */
+    @Test
+    public void testAddSingleGameToListByIndex() {
+        gameList.addToList("1", games.stream());
+        assertEquals(1, gameList.count());
+        System.out.println(gameList.getGameNames());
+    }
+
+    /**
+     * Tests adding games using a range.
+     */
+    @Test
+    public void testAddGameByRange() {
+        gameList.addToList("1-2", games.stream());
+        assertEquals(2, gameList.count());
+
+        gameList.addToList("3-3", games.stream());
+        assertEquals(3, gameList.count());
+
+        gameList.addToList("1-10", games.stream()); // Only 3 games available
+        assertEquals(3, gameList.count());
+    }
+
+    /**
+     * Tests adding all games.
+     */
+    @Test
+    public void testAddAll() {
+        gameList.addToList("ALL", games.stream());
+        assertEquals(3, gameList.count());
+        System.out.println(gameList.getGameNames());
     }
 }

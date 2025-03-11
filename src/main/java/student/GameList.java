@@ -118,10 +118,9 @@ public class GameList implements IGameList {
             selectedGames.add(gameList.get(index - 1));
             return;
         } catch (NumberFormatException ignored) {
-            // If not a number, continue to name matching
+            // Continue to name matching if not a number
         }
 
-        // Add by range
         if (str.contains("-")) {
             String[] parts = str.split("-");
             if (parts.length != 2) {
@@ -132,8 +131,12 @@ public class GameList implements IGameList {
                 int start = Integer.parseInt(parts[0]);
                 int end = Integer.parseInt(parts[1]);
 
-                if (start > end || start <= 0 || end > gameList.size()) {
+                if (start <= 0 || end <= 0 || start > gameList.size()) {
                     throw new IllegalArgumentException("Invalid range.");
+                }
+
+                if (end > gameList.size()) {
+                    end = gameList.size();
                 }
 
                 for (int i = start; i <= end; i++) {
@@ -157,6 +160,8 @@ public class GameList implements IGameList {
         }
     }
 
+
+
     /**
      * Removes a game from the list if it exists.
      *
@@ -165,9 +170,10 @@ public class GameList implements IGameList {
      */
     @Override
     public void removeFromList(String str) throws IllegalArgumentException {
-        boolean removed = selectedGames.removeIf(game -> game.getName().equalsIgnoreCase(str.trim()));
+        // TODO Auto-generated method stub
+        boolean removed = selectedGames.removeIf(game -> game.getName().equalsIgnoreCase(str));
         if (!removed) {
-            throw new IllegalArgumentException("Game not found in the list.");
+            throw new UnsupportedOperationException("Game not found in the list.");
         }
     }
 }
