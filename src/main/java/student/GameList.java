@@ -26,7 +26,7 @@ public class GameList implements IGameList {
     @Override
     public List<String> getGameNames() {
         return list.stream()
-                .sorted(String.CASE_INSENSITIVE_ORDER.thenComparing(String::compareTo)) // ✅ Ensures correct sorting order
+                .sorted(String.CASE_INSENSITIVE_ORDER.thenComparing(String::compareTo))
                 .collect(Collectors.toList());
     }
 
