@@ -66,11 +66,20 @@ class GameListTest {
 
     @Test
     public void testAddToList() {
-        System.out.println("Attempting to add: Chess");
-        gameList.addToList("Chess", games.stream());
+        // Convert the stream to a list for reuse
+        List<BoardGame> gameListCopy = games.stream().collect(Collectors.toList());
 
-        System.out.println("Current game count: " + gameList.count());
-        assertEquals(1, gameList.count()); // Expecting 1 game to be added
+        // Test adding a valid game
+        gameList.addToList("Chess", gameListCopy.stream());
+        assertEquals(1, gameList.count(), "Chess should be added.");
+
+        // Test adding another valid game
+        gameList.addToList("Monopoly", gameListCopy.stream());
+        assertEquals(2, gameList.count(), "Monopoly should be added.");
+
+        // Test adding a game that does not exist
+        gameList.addToList("Catan", gameListCopy.stream());
+        assertEquals(2, gameList.count(), "Catan should NOT be added.");
     }
 
 

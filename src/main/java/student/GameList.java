@@ -93,14 +93,16 @@ public class GameList implements IGameList {
      */
     @Override
     public void addToList(String str, Stream<BoardGame> filtered) {
-        List<BoardGame> gameList = filtered.collect(Collectors.toList()); // Convert to list for debugging
-        System.out.println("Games available in stream: " + gameList.size());
-        gameList.forEach(g -> System.out.println("Checking game: " + g.getName()));
+        // Convert stream to list to avoid stream reuse issues
+        List<BoardGame> gameList = filtered.collect(Collectors.toList());
 
-        gameList.stream()
-                .filter(g -> g.getName().trim().equalsIgnoreCase(str.trim()))
-                .findFirst()
-                .ifPresent(selectedGames::add);
+        // Find the game in the list
+        for (BoardGame game : gameList) {
+            if (game.getName().trim().equalsIgnoreCase(str.trim())) {
+                selectedGames.add(game);
+                return; // Stop after adding the first match
+            }
+        }
     }
 
     /**
