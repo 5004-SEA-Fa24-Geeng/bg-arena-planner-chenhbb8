@@ -170,10 +170,9 @@ public class GameList implements IGameList {
      */
     @Override
     public void removeFromList(String str) throws IllegalArgumentException {
-        // TODO Auto-generated method stub
-        boolean removed = selectedGames.removeIf(game -> game.getName().equalsIgnoreCase(str));
+        boolean removed = selectedGames.removeIf(game -> game.getName().equalsIgnoreCase(str.trim()));
         if (!removed) {
-            throw new UnsupportedOperationException("Game not found in the list.");
+            throw new IllegalArgumentException("Game not found in the list."); // ✅ Fix: Use IllegalArgumentException
         }
     }
 }
