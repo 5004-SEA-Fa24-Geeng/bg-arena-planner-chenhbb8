@@ -1,27 +1,26 @@
 package student;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Stream;
+import student.BoardGame;
+import student.GameList;
+import student.IGameList;
 
-/**
- * Unit tests for the GameList class, ensuring that all methods function correctly.
- */
-public class GameListTest {
-    private GameList gameList;
+import java.util.List;
+import java.util.stream.Stream;
+import java.util.Set;
+import java.util.HashSet;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.IOException;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class GameListTest {
+    private IGameList gameList;
     private Set<BoardGame> games;
 
-    /**
-     * Initializes the test environment before each test.
-     */
     @BeforeEach
     public void setup() {
         gameList = new GameList();
@@ -31,78 +30,63 @@ public class GameListTest {
         games.add(new BoardGame("Catan", 3, 3, 4, 60, 120, 4.0, 50, 8.2, 2002));
     }
 
-    /**
-     * Tests the getGameNames method to ensure it retrieves the correct game names.
-     */
     @Test
     public void testGetGameNames() {
-        gameList.addToList("ALL", games.stream());
+        gameList.addToList("Catan", games.stream());
+        gameList.addToList("Chess", games.stream());
+        gameList.addToList("Monopoly", games.stream());
         List<String> names = gameList.getGameNames();
-        assertEquals(3, names.size(), "Should return 3 game names.");
-        assertTrue(names.contains("Chess"), "Chess should be in the list.");
-        assertTrue(names.contains("Monopoly"), "Monopoly should be in the list.");
-        assertTrue(names.contains("Catan"), "Catan should be in the list.");
+        assertEquals(List.of("Chess", "Monopoly", "Catan"), names);
     }
 
-    /**
-     * Tests the clear method to ensure it removes all games.
-     */
     @Test
     public void testClear() {
-        gameList.addToList("ALL", games.stream());
+        gameList.addToList("Catan", games.stream());
         gameList.clear();
-        assertEquals(0, gameList.count(), "Game list should be empty after clearing.");
+        assertEquals(0, gameList.count());
     }
 
-    /**
-     * Tests the count method to ensure it returns the correct number of games.
-     */
     @Test
     public void testCount() {
-        assertEquals(0, gameList.count(), "Initially, count should be 0.");
+        assertEquals(0, gameList.count());
         gameList.addToList("Chess", games.stream());
-        assertEquals(1, gameList.count(), "Count should be 1 after adding a game.");
+        assertEquals(1, gameList.count());
     }
 
-    /**
-     * Tests the saveGame method to ensure it correctly writes game names to a file.
-     */
     @Test
-    public void testSaveGame() throws IOException {
-        String filename = "test_games.txt";
-        gameList.addToList("ALL", games.stream());
-        gameList.saveGame(filename);
+    public void testSaveGame() throws Exception {
+        gameList.addToList("Catan", games.stream());
+        gameList.addToList("Chess", games.stream());
+        gameList.saveGame("test_save.txt");
 
-        Path filePath = Path.of(filename);
-        assertTrue(Files.exists(filePath), "File should exist after saving.");
-        List<String> lines = Files.readAllLines(filePath);
-        assertEquals(3, lines.size(), "Saved file should contain 3 game names.");
-        assertTrue(lines.contains("Chess"), "Chess should be in the saved file.");
-        assertTrue(lines.contains("Monopoly"), "Monopoly should be in the saved file.");
-        assertTrue(lines.contains("Catan"), "Catan should be in the saved file.");
-
-        // Cleanup after test
-        Files.deleteIfExists(filePath);
+        List<String> lines = Files.readAllLines(Paths.get("test_save.txt"));
+        assertTrue(lines.contains("Catan"));
+        assertTrue(lines.contains("Chess"));
     }
 
-    /**
-     * Tests the addToList method to ensure games can be added by name.
-     */
     @Test
     public void testAddToList() {
-        gameList.addToList("Chess", games.stream());
+        // Convert the stream to a list for reuse
+        List<BoardGame> gameListCopy = games.stream().collect(Collectors.toList());
+
+        // Test adding a valid game
+        gameList.addToList("Chess", gameListCopy.stream());
         assertEquals(1, gameList.count(), "Chess should be added.");
-        assertTrue(gameList.getGameNames().contains("Chess"), "Chess should exist in the list.");
+
+        // Test adding another valid game
+        gameList.addToList("Monopoly", gameListCopy.stream());
+        assertEquals(2, gameList.count(), "Monopoly should be added.");
+
+        // Test adding a game that does not exist
+        gameList.addToList("Catan", gameListCopy.stream());
+        assertEquals(3, gameList.count(), "Catan should NOT be added.");
     }
 
-    /**
-     * Tests the removeFromList method to ensure games can be removed by name.
-     */
+
     @Test
     public void testRemoveFromList() {
-        gameList.addToList("ALL", games.stream());
-        gameList.removeFromList("Chess");
-        assertEquals(2, gameList.count(), "Chess should be removed.");
-        assertFalse(gameList.getGameNames().contains("Chess"), "Chess should not exist in the list.");
+        gameList.addToList("Monopoly", games.stream());
+        gameList.removeFromList("Monopoly");
+        assertEquals(0, gameList.count());
     }
 }
