@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
 import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 public class GameList implements IGameList {
     /** List to store the game names.*/
@@ -24,7 +25,9 @@ public class GameList implements IGameList {
 
     @Override
     public List<String> getGameNames() {
-        return List.copyOf(list);
+        return list.stream()
+                .sorted(String.CASE_INSENSITIVE_ORDER)
+                .collect(Collectors.toList());
     }
 
     @Override
