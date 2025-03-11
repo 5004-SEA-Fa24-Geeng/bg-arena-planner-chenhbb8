@@ -1,190 +1,122 @@
 package student;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.List;
-import java.util.stream.Stream;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+/**
+ * The GameList class manages a collection of selected board games.
+ * It provides methods to add, remove, count, and retrieve games,
+ * as well as saving and clearing the list.
+ */
 
 public class GameList implements IGameList {
-    /** List to store the game names.*/
-    private Set<String> list;
-
-    /** Delimiter for adding by range. */
-    private static final String ADD_DELIM = "-";
 
     /**
      * Constructor for the GameList.
      */
+    private Set<BoardGame> selectedGames;
+
+    /**
+     * Constructs a new GameList with an empty set of selected board games.
+     */
     public GameList() {
-        list = new HashSet<>();
+        this.selectedGames = new HashSet<>();
     }
 
+    /**
+     * Retrieves the names of all selected games in a sorted order.
+     *
+     * @return A list of game names sorted in case-insensitive order.
+     * @throws UnsupportedOperationException if the game list is empty.
+     */
     @Override
     public List<String> getGameNames() {
-        return list.stream()
-                .sorted(String.CASE_INSENSITIVE_ORDER.thenComparing(String::compareTo))
+        // TODO Auto-generated method stub
+        if (selectedGames.isEmpty()) {
+            throw new UnsupportedOperationException("No games in the list.");
+        }
+        return selectedGames.stream()
+                .map(BoardGame::getName)
+                .sorted(String.CASE_INSENSITIVE_ORDER)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Clears all games from the list.
+     */
     @Override
     public void clear() {
-        list.clear();
+        // TODO Auto-generated method stub
+        selectedGames.clear();
     }
 
+    /**
+     * Returns the number of games currently in the list.
+     *
+     * @return The count of games in the list.
+     */
     @Override
     public int count() {
-        return list.size();
+        // TODO Auto-generated method stub
+        return selectedGames.size();
     }
 
+    /**
+     * Saves the current list of game names to a specified file.
+     *
+     * @param filename The name of the file to save the game list to.
+     * @throws UnsupportedOperationException if an I/O error occurs during saving.
+     */
     @Override
     public void saveGame(String filename) {
-        Path filePath = Path.of(filename);
-        try {
-            Files.write(filePath, getGameNames());
-            System.out.println("File saved!");
+        // TODO Auto-generated method stub
+        try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(Paths.get(filename)))) {
+            for (BoardGame game : selectedGames) {
+                writer.println(game.getName());
+            }
         } catch (IOException e) {
-            System.out.println("File not saved!");
-            e.printStackTrace();
+            throw new UnsupportedOperationException("Error saving game list.");
         }
     }
 
+    /**
+     * Adds a game to the list if it exists in the provided stream.
+     *
+     * @param str      The name of the game to add.
+     * @param filtered The stream of board games to search for the game.
+     * @throws UnsupportedOperationException if the game is not found in the stream.
+     */
     @Override
-    public void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException {
-        if (str == null || filtered == null) {
-            throw new IllegalArgumentException();
-        }
+    public void addToList(String str, Stream<BoardGame> filtered) {
+        // Convert stream to list to avoid stream reuse issues
+        List<BoardGame> gameList = filtered.collect(Collectors.toList());
 
-        str = str.trim();
-        List<BoardGame> filteredList = filtered.toList();
-
-        if (filteredList.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-
-        // add  by string - all
-        if (str.equalsIgnoreCase(IGameList.ADD_ALL)) {
-            list.addAll(filteredList.stream().map(BoardGame::getName).toList());
-            return;
-        }
-
-        // add by string - name
-        for (BoardGame game : filteredList) {
-            if (game.getName().equalsIgnoreCase(str)) {
-                list.add(game.getName());
-                return; // added
+        // Find the game in the list
+        for (BoardGame game : gameList) {
+            if (game.getName().trim().equalsIgnoreCase(str.trim())) {
+                selectedGames.add(game);
+                return; // Stop after adding the first match
             }
-        }
-
-        // add by number - range
-        if (str.contains(ADD_DELIM)) {
-            String[] range = str.split(ADD_DELIM);
-            if (range.length != 2) {
-                throw new IllegalArgumentException();
-            }
-
-            try {
-                int l = Integer.parseInt(range[0]);  // start index
-                int r = Integer.parseInt(range[1]);  // end index
-
-                if (l > r || l <= 0) {
-                    throw new IllegalArgumentException();
-                }
-                if (l > filteredList.size()) {
-                    throw new IllegalArgumentException();
-                }
-                if (r > filteredList.size()) {
-                    r = filteredList.size();
-                }
-
-                for (int i = l; i <= r; i++) {
-                    list.add(filteredList.get(i - 1).getName());
-                }
-                return;
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException();
-            }
-        }
-
-        // add by number - index
-        try {
-            int idx = Integer.parseInt(str);
-            if (idx <= 0 || idx > filteredList.size()) {
-                throw new IllegalArgumentException();
-            }
-
-            list.add(filteredList.get(idx - 1).getName());
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException();
         }
     }
 
+    /**
+     * Removes a game from the list if it exists.
+     *
+     * @param str The name of the game to remove.
+     * @throws UnsupportedOperationException if the game is not found in the list.
+     */
     @Override
     public void removeFromList(String str) throws IllegalArgumentException {
-        str = str.trim();
-        List<String> gameNames = getGameNames();
-
-        //remove by string - all
-        if (str.equalsIgnoreCase(IGameList.ADD_ALL)) {
-            clear();
-            return;
-        }
-
-        if (list.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-
-        // remove by string - single name
-        for (String name : gameNames) {
-            if (name.equalsIgnoreCase(str)) {
-                list.remove(name);
-                return;
-            }
-        }
-
-        // remove by number - range
-        if (str.contains(ADD_DELIM)) {
-            String[] range = str.split(ADD_DELIM);
-            if (range.length != 2) {
-                throw new IllegalArgumentException();
-            }
-
-            try {
-                int l = Integer.parseInt(range[0]);  // start index
-                int r = Integer.parseInt(range[1]);  // end index
-
-                if (l > r || l <= 0) {
-                    throw new IllegalArgumentException();
-                }
-                if (l > count()) {
-                    throw new IllegalArgumentException();
-                }
-                if (r > count()) {
-                    r = count();
-                }
-
-                for (int i = l; i <= r; i++) {
-                    list.remove(gameNames.get(i - 1));
-                }
-                return;
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException();
-            }
-        }
-
-        // remove by number - index
-        try {
-            int idx = Integer.parseInt(str);
-            if (idx <= 0 || idx > count()) {
-                throw new IllegalArgumentException();
-            }
-
-            list.remove(gameNames.get(idx - 1));
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException();
+        // TODO Auto-generated method stub
+        boolean removed = selectedGames.removeIf(game -> game.getName().equalsIgnoreCase(str));
+        if (!removed) {
+            throw new UnsupportedOperationException("Game not found in the list.");
         }
     }
 }
