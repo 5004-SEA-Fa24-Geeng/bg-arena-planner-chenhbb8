@@ -92,16 +92,68 @@ public class GameList implements IGameList {
      * @throws UnsupportedOperationException if the game is not found in the stream.
      */
     @Override
-    public void addToList(String str, Stream<BoardGame> filtered) {
-        // Convert stream to list to avoid stream reuse issues
-        List<BoardGame> gameList = filtered.collect(Collectors.toList());
+    public void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException {
+        if (str == null || filtered == null) {
+            throw new IllegalArgumentException("Input cannot be null.");
+        }
 
-        // Find the game in the list
-        for (BoardGame game : gameList) {
-            if (game.getName().trim().equalsIgnoreCase(str.trim())) {
-                selectedGames.add(game);
-                return; // Stop after adding the first match
+        List<BoardGame> gameList = filtered.toList();
+
+        if (gameList.isEmpty()) {
+            throw new IllegalArgumentException("Game list cannot be empty.");
+        }
+
+        // Add all games
+        if (str.equalsIgnoreCase("ALL")) {
+            selectedGames.addAll(gameList);
+            return;
+        }
+
+        // Add by index
+        try {
+            int index = Integer.parseInt(str);
+            if (index <= 0 || index > gameList.size()) {
+                throw new IllegalArgumentException("Invalid index.");
             }
+            selectedGames.add(gameList.get(index - 1));
+            return;
+        } catch (NumberFormatException ignored) {
+            // If not a number, continue to name matching
+        }
+
+        // Add by range
+        if (str.contains("-")) {
+            String[] parts = str.split("-");
+            if (parts.length != 2) {
+                throw new IllegalArgumentException("Invalid range format.");
+            }
+
+            try {
+                int start = Integer.parseInt(parts[0]);
+                int end = Integer.parseInt(parts[1]);
+
+                if (start > end || start <= 0 || end > gameList.size()) {
+                    throw new IllegalArgumentException("Invalid range.");
+                }
+
+                for (int i = start; i <= end; i++) {
+                    selectedGames.add(gameList.get(i - 1));
+                }
+                return;
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid range values.");
+            }
+        }
+
+        // Add by name
+        Optional<BoardGame> game = gameList.stream()
+                .filter(g -> g.getName().trim().equalsIgnoreCase(str.trim()))
+                .findFirst();
+
+        if (game.isPresent()) {
+            selectedGames.add(game.get());
+        } else {
+            throw new IllegalArgumentException("Game not found.");
         }
     }
 
